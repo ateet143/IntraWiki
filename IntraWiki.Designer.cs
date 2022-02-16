@@ -85,10 +85,12 @@
             // 
             // listBoxWki
             // 
+            this.listBoxWki.Font = new System.Drawing.Font("Modern No. 20", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxWki.FormattingEnabled = true;
+            this.listBoxWki.ItemHeight = 18;
             this.listBoxWki.Location = new System.Drawing.Point(394, 100);
             this.listBoxWki.Name = "listBoxWki";
-            this.listBoxWki.Size = new System.Drawing.Size(338, 277);
+            this.listBoxWki.Size = new System.Drawing.Size(338, 274);
             this.listBoxWki.TabIndex = 4;
             // 
             // textBoxSearch
@@ -169,6 +171,7 @@
             this.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.Name = "IntraWiki";
             this.Text = "IntraWiki";
+            this.Load += new System.EventHandler(this.IntraWiki_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
