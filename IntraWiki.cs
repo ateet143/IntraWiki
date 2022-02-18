@@ -132,7 +132,6 @@ namespace IntraWiki
             textBoxStructure.Text = myArray[b, 2];
             textBoxDefinition.Text = myArray[b, 3];
 
-
         }
     }
 }
