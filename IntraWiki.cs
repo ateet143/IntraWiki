@@ -18,33 +18,31 @@ namespace IntraWiki
         }
 
         static int rowSize = 12;
-        static int colSize = 5;
+        static int colSize = 4;
         static string[,] myArray = new string[rowSize, colSize];
 
+        static int rowCounter;
+        static int colCounter;
 
 
         private void DisplayArray()
         {
             listBoxWki.Items.Clear();
-            /*  for(int i=0; i< 1; i++)
-              {
-                  listBoxWki.Items.Add("List of items");
-                  listBoxWki.Items.Add("------------------------");
-              }*/
-            for (int x = 0; x < rowSize; x++)
+            for (int x = 0; x <= rowCounter; x++)
             {
                 string oneLine = "";
                 oneLine = oneLine + " " + myArray[x, 0];
                 listBoxWki.Items.Add(oneLine);
+               
             }
         }
 
         private void sortName()
         {
             int num = 0;
-            for (int rowX = 0; rowX < rowSize; rowX++)
+            for (int rowX = 0; rowX <= rowCounter; rowX++)
             {
-                for (int j = rowX + 1; j < rowSize; j++)
+                for (int j = rowX + 1; j <= rowCounter; j++)
                 {
 
                     if ((myArray[rowX, num].CompareTo(myArray[j, num]) > 0))
@@ -53,7 +51,7 @@ namespace IntraWiki
                         myArray[rowX, num] = myArray[j, num];
                         myArray[j, num] = temp;
 
-                        for (int k = 1; k < colSize; k++)
+                        for (int k = 1; k <= colCounter; k++)
                         {
                             string temp1 = myArray[rowX, k];
                             myArray[rowX, k] = myArray[j, k];
@@ -104,15 +102,18 @@ namespace IntraWiki
             myArray[9, 3] = "Queue is a special type of collection that stores the elements in FIFO style (First In First Out), exactly opposite of the Stack<T> collection. It contains the elements in the order they were added. C# includes generic Queue<T> and non-generic Queue collection. It is recommended to use the generic Queue<T> collection.";
             myArray[10, 3] = "Stack is a special type of collection that stores elements in LIFO style (Last In First Out). C# includes the generic Stack<T> and non-generic Stack collection classes. It is recommended to use the generic Stack<T> collection.Stack is useful to store temporary data in LIFO style, and you might want to delete an element after retrieving its value.";
             myArray[11, 3] = "Stack is a special type of collection that stores elements in LIFO style (Last In First Out). C# includes the generic Stack<T> and non-generic Stack collection classes. It is recommended to use the generic Stack<T> collection.Stack is useful to store temporary data in LIFO style, and you might want to delete an element after retrieving its value.";
+            rowCounter = 11;
+            colCounter = 3;
 
-            sortName();
+
+           //sortName();
             DisplayArray();
         }
 
 
-        public int findIndex(string a)
+       public int findIndex(string a)
         {
-            for (int i = 0; i < rowSize; i++)
+            for (int i = 0; i <= rowCounter; i++)
             {
                 if (myArray[i, 0].Equals(a))
                 {
