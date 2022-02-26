@@ -25,10 +25,7 @@ namespace IntraWiki
         static int colSize = 4;
         static string[,] myArray = new string[rowSize, colSize];
 
-        static int rowCounter = 0;
-        static int colCounter = 0;
-
-        string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Definitions.bin");
+        string defaultFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Definitions.bin");
         string currentFile;       //Setting global variable as filename, can be used for saving or renaming file while saving
         #endregion
 
@@ -37,7 +34,7 @@ namespace IntraWiki
         {
             listBoxWiki.Items.Clear();
             listBoxCategory.Items.Clear();
-           
+
             for (int x = 0; x < rowSize; x++)
             {
                 if ((string.IsNullOrEmpty(myArray[x, 0]) || string.IsNullOrEmpty(myArray[x, 1])))   //Will not add to the list box if the array element is empty or null.
@@ -46,91 +43,103 @@ namespace IntraWiki
                 }
                 listBoxWiki.Items.Add(myArray[x, 0]);
                 listBoxCategory.Items.Add(myArray[x, 1]);
-                
+
             }
         }
 
         private void sortByColumn()
         {
-                int num = 0;
-                for (int rowX = 0; rowX < rowCounter; rowX++)
+            int num = 0;
+            for (int rowX = 0; rowX < rowSize; rowX++)
+            {
+                for (int j = rowX + 1; j < rowSize; j++)
                 {
-                    for (int j = rowX + 1; j <= rowCounter; j++)
+                    if ((myArray[rowX, num].CompareTo(myArray[j, num]) > 0))
                     {
-                        if ((myArray[rowX, num].CompareTo(myArray[j, num]) > 0))
-                        {
-                            string temp = myArray[rowX, num];
-                            myArray[rowX, num] = myArray[j, num];
-                            myArray[j, num] = temp;
+                        string temp = myArray[rowX, num];
+                        myArray[rowX, num] = myArray[j, num];
+                        myArray[j, num] = temp;
 
-                            for (int k = 1; k <= colCounter; k++)                       // sort the other column respective to their rows sorted
-                            {
-                                string temp1 = myArray[rowX, k];
-                                myArray[rowX, k] = myArray[j, k];
-                                myArray[j, k] = temp1;
-                            }
+                        for (int k = 1; k < colSize; k++)                       // sort the other column respective to their rows sorted
+                        {
+                            string temp1 = myArray[rowX, k];
+                            myArray[rowX, k] = myArray[j, k];
+                            myArray[j, k] = temp1;
                         }
                     }
                 }
+            }
         }
 
         private void IntraWiki_Load(object sender, EventArgs e)
         {
-            if (File.Exists(fileName))
+            OpenFileDialog openFileDialogVG = new OpenFileDialog();
+            openFileDialogVG.InitialDirectory = defaultFileName;
+            openFileDialogVG.Filter = "BIN Files|*.bin";
+            openFileDialogVG.Title = "Select a BIN File";
+            if (openFileDialogVG.ShowDialog() == DialogResult.OK)
             {
-                try
-                {
-                    using (Stream stream = File.Open(fileName, FileMode.Open))      //by using it open the file and  close (it will do background work for us)
-                    {
-                        if (stream.Length == 0)                                     // if the file is empty just do nothing, to handle the error.
-                        {
-                            toolStripStatusLabel1.Text = fileName + "(empty) IS OPENED";
-                            return;
-                        }
-                        else                                                       //Only deserialize if the file has binary content
-                        {
-                            BinaryFormatter bin = new BinaryFormatter();
-                            {
-                                for (int y = 0; y < colSize; y++)
-                                {
-                                    for (int x = 0; x < rowSize; x++)
-                                    {
-                                        myArray[x, y] = bin.Deserialize(stream).ToString();
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                }
-                catch (IOException ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
-
-                toolStripStatusLabel1.Text = fileName + " IS OPENED";
+                currentFile = openFileDialogVG.FileName;                   
+                openRecord(currentFile);
+                toolStripStatusLabel1.Text = currentFile + " is Opened";
             }
             else
             {
-                try
+                for (int x = 0; x < rowSize; x++)
                 {
-                    using (Stream stream = File.Open(fileName, FileMode.Create))      //by using it open the file and  close (it will do background work for us)
+                    myArray[x, 0] = "";
+                    myArray[x, 1] = String.Empty;
+                    myArray[x, 2] = String.Empty;
+                    myArray[x, 3] = String.Empty;
+                }
+            }
+            sortByColumn();
+            DisplayArray();
+        }
+
+        private void openRecord(string openFileName)
+        {
+            try
+            {
+                using (Stream stream = File.Open(openFileName, FileMode.Open))
+                {
+                    BinaryFormatter bin = new BinaryFormatter();
+                    for (int y = 0; y < colSize; y++)
                     {
-                        toolStripStatusLabel1.Text = fileName + " IS CREATED";
+                        for (int x = 0; x < rowSize; x++)
+                        {
+                            myArray[x, y] = (string)bin.Deserialize(stream);
+                        }
                     }
-
                 }
-                catch (IOException ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
-
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show(ex.ToString());
             }
             DisplayArray();
-            currentFile = fileName;
-           
+        }
 
-
+        private void saveRecord(string saveFileName)
+        {
+            try
+            {
+                using (Stream stream = File.Open(saveFileName, FileMode.Create))
+                {
+                    BinaryFormatter bin = new BinaryFormatter();
+                    for (int y = 0; y < colSize; y++)
+                    {
+                        for (int x = 0; x < rowSize; x++)
+                        {
+                            bin.Serialize(stream, myArray[x, y]);
+                        }
+                    }
+                }
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         private void buttonAutoLoadData_Click(object sender, EventArgs e)
@@ -147,8 +156,7 @@ namespace IntraWiki
             myArray[9, 0] = "Queue"; myArray[9, 1] = "Abstract"; myArray[9, 2] = "Linear"; myArray[9, 3] = "Queue is a special type of collection that stores the elements in FIFO style (First In First Out), exactly opposite of the Stack<T> collection. It contains the elements in the order they were added. C# includes generic Queue<T> and non-generic Queue collection. It is recommended to use the generic Queue<T> collection.";
             myArray[10, 0] = "Stack"; myArray[10, 1] = "Abstract"; myArray[10, 2] = "Linear"; myArray[10, 3] = "Stack is a special type of collection that stores elements in LIFO style (Last In First Out). C# includes the generic Stack<T> and non-generic Stack collection classes. It is recommended to use the generic Stack<T> collection.Stack is useful to store temporary data in LIFO style, and you might want to delete an element after retrieving its value.";
             myArray[11, 0] = "Hash Table"; myArray[11, 1] = "Hash"; myArray[11, 2] = "Non-Linear"; myArray[11, 3] = "Stack is a special type of collection that stores elements in LIFO style (Last In First Out). C# includes the generic Stack<T> and non-generic Stack collection classes. It is recommended to use the generic Stack<T> collection.Stack is useful to store temporary data in LIFO style, and you might want to delete an element after retrieving its value.";
-            rowCounter = 11;
-            colCounter = 3;
+          
             sortByColumn();
             DisplayArray();
             toolStripStatusLabel1.Text = "DATA IS AUTO-LOADED";
@@ -161,7 +169,7 @@ namespace IntraWiki
 
         private void listBoxWki_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(listBoxWiki.SelectedIndex == -1)
+            if (listBoxWiki.SelectedIndex == -1)
             {
                 toolStripStatusLabel1.Text = "! Element in the List Not selected";
             }
@@ -180,93 +188,40 @@ namespace IntraWiki
         #region File Handling
         private void buttonOpen_Click(object sender, EventArgs e)
         {
-            OpenFileDialog OpenBinary = new OpenFileDialog
-            {
-                InitialDirectory = fileName
-            };                                                           //set the default filename as Rainbow.bin 
-            DialogResult sr = OpenBinary.ShowDialog();
-            if (sr == DialogResult.OK)
-            {
-                fileName = OpenBinary.FileName;
-                currentFile = fileName;
-                toolStripStatusLabel1.Text = fileName + " is opened.";
-             
-                try
-                {
-                    using (Stream stream = File.Open(fileName, FileMode.Open))      //by using it open the file and  close (it will do background work for us)
-                    {
-                        BinaryFormatter bin = new BinaryFormatter();
-                        {
-                            for (int y = 0; y < colCounter; y++)
-                            {
-                                for (int x = 0; x < rowCounter; x++)
-                                {
-                                    myArray[x, y] = bin.Deserialize(stream).ToString();
-                                }
-                            }
-                        }
-                    }
+            OpenFileDialog OpenBinary = new OpenFileDialog();
+            OpenBinary.InitialDirectory = defaultFileName;
+            //defaultFileName = OpenBinary.FileName;
+            OpenBinary.Filter = "BIN Files|*.bin";
+            OpenBinary.Title = "Select a BIN File";
 
-                }
-                catch (IOException ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
-                DisplayArray();
-            }
-            else
+            if (OpenBinary.ShowDialog() == DialogResult.OK)
             {
-                return;                                                  //will exit dialog box without doing anything
+                currentFile = OpenBinary.FileName;
+                openRecord(currentFile);
+                toolStripStatusLabel1.Text = currentFile + " is opened.";
             }
+
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveBinary = new SaveFileDialog
-            {
-                InitialDirectory = fileName,
-                Filter = "binary files (*.bin)|*.bin|All files (*.*)|*.*",               //setting so that user can save as binary files
-                DefaultExt = "bin",                                                      //save the file as bin extension if all files is choosed.
-                FileName = Path.GetFileName(currentFile)                                //set filename in the SaveFileDialog // getFileName extract the name only without path.
-            };
+            SaveFileDialog saveBinary = new SaveFileDialog();
+            saveBinary.InitialDirectory = defaultFileName;
+            saveBinary.Filter = "binary files (*.bin)|*.bin|All files (*.*)|*.*";            //setting so that user can save as binary files
+            saveBinary.DefaultExt = "bin";                                                   //save the file as bin extension if all files is choosed.
+            saveBinary.FileName = Path.GetFileName(currentFile);                             //set filename in the SaveFileDialog // getFileName extract the name only without path.
+            
             DialogResult sr = saveBinary.ShowDialog();
-            if (sr == DialogResult.Cancel)
+
+            if (saveBinary.FileName != "")
             {
-                return;
+                saveRecord(currentFile);
             }
-            if (sr == DialogResult.OK)
+            else
             {
-                fileName = saveBinary.FileName;
-                currentFile = fileName;
-                toolStripStatusLabel1.Text = "File saved as: " + fileName;
-
-                try
-                {
-                    using (Stream stream = File.Open(fileName, FileMode.Create))      //by using it open the file and  close (it will do background work for us)
-                    {
-                        BinaryFormatter bin = new BinaryFormatter();
-
-                        {
-                            for (int y = 0; y < colSize; y++)
-                            {
-                                for (int x = 0; x < rowSize; x++)
-                                {
-                                    if (myArray[x, y] == null)                      //if the array index contains null then it will be filled with empty to deal with null.
-                                    {
-                                        myArray[x, y] = string.Empty;              //It will fill all the element with empty and save it to binary. useful when same file is need to open.
-                                    }
-                                    bin.Serialize(stream, myArray[x, y]);
-                                }
-                            }
-                        }
-                    }
-
-                }
-                catch (IOException ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
+                saveRecord(defaultFileName);
             }
+           
         }
 
         #endregion
@@ -274,50 +229,55 @@ namespace IntraWiki
         #region AddFunctions
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            try                                     
+            if (string.IsNullOrEmpty(textBoxName.Text))                                  //this code force the user to input something. As empty string is already in the array, need to mention NullnEmpty both
             {
-                if (string.IsNullOrEmpty(textBoxName.Text))                                  //this code force the user to input something. As empty string is already in the array, need to mention NullnEmpty both
-                {
-                    errorProvider1.SetError(textBoxName, "!Cannot leave blank");
-                    
-                }
-                if (string.IsNullOrEmpty(textBoxCategory.Text))
-                {
-                    errorProvider1.SetError(textBoxCategory, "!Cannot leave blank");
-                }
-                if (string.IsNullOrEmpty(textBoxStructure.Text))
-                {
-                    errorProvider1.SetError(textBoxStructure, "!Cannot leave blank");
-                }
-                if (string.IsNullOrEmpty(textBoxDefinition.Text))
-                {
-                    errorProvider1.SetError(textBoxDefinition, "!Cannot leave blank");
-                }
+                errorProvider1.SetError(textBoxName, "!Cannot leave blank");
+            }
+          else  if (string.IsNullOrEmpty(textBoxCategory.Text))
+            {
+                errorProvider1.SetError(textBoxCategory, "!Cannot leave blank");
+            }
+          else  if (string.IsNullOrEmpty(textBoxStructure.Text))
+            {
+                errorProvider1.SetError(textBoxStructure, "!Cannot leave blank");
+            }
+         else   if (string.IsNullOrEmpty(textBoxDefinition.Text))
+            {
+                errorProvider1.SetError(textBoxDefinition, "!Cannot leave blank");
+            }
 
-                else
+            else
+            {
+                for (int x = 0; x < rowSize;x++)
                 {
-                   
-                        rowCounter = identifyNextEligibleRow();                             //Will get the next available index to be added.
-                    if (rowCounter >= rowSize)                                       // will show exception if added more than the size of 2d array.
+                    if (myArray[x, 0] == "")
                     {
-                        MessageBox.Show("CANNOT EXCEED MORE THAN 12 ROWS","*User Information*",MessageBoxButtons.OK,MessageBoxIcon.Information);
-                        return;
-                    }
-                        myArray[rowCounter, 0] = textBoxName.Text;
-                        myArray[rowCounter, 1] = textBoxCategory.Text;
-                        myArray[rowCounter, 2] = textBoxStructure.Text;
-                        myArray[rowCounter, 3] = textBoxDefinition.Text;
-                        rowCounter++;
-                        colCounter = 3;
+                        myArray[x, 0] = textBoxName.Text;
+                        myArray[x, 1] = textBoxCategory.Text;
+                        myArray[x, 2] = textBoxStructure.Text;
+                        myArray[x, 3] = textBoxDefinition.Text;
+                        var result = MessageBox.Show("Proceed with new Record?", "Add New Record",
+                            MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                        if (result == DialogResult.OK)
+                        {
+                            break;
+                        }
                         
+                    }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+            clearTextBox();
             DisplayArray();
-            sortByColumn();
+            
+        }
+
+        private void clearTextBox()
+        {
+            textBoxName.Clear();
+            textBoxCategory.Clear();
+            textBoxStructure.Clear();
+            textBoxDefinition.Clear();
+            textBoxName.Focus();
         }
 
         private int identifyNextEligibleRow()                                      //useful for add button, if the element already present then it will return the next available array index.
@@ -336,7 +296,7 @@ namespace IntraWiki
         }
 
         private void textBoxName_KeyPress(object sender, KeyPressEventArgs e)
-        {
+      {
             errorProvider1.Clear();
         }
 
@@ -355,7 +315,7 @@ namespace IntraWiki
             errorProvider1.Clear();
         }
 
-       
+
     }
     #endregion
 
