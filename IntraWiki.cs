@@ -35,41 +35,43 @@ namespace IntraWiki
         #region Display,Application auto Load, Data Auto load
         private void DisplayArray()
         {
-            listBoxWki.Items.Clear();
+            listBoxWiki.Items.Clear();
+            listBoxCategory.Items.Clear();
+           
             for (int x = 0; x < rowSize; x++)
             {
-                if ((string.IsNullOrEmpty(myArray[x, 0])))   //Will not add to the list box if the array element is empty or null.
+                if ((string.IsNullOrEmpty(myArray[x, 0]) || string.IsNullOrEmpty(myArray[x, 1])))   //Will not add to the list box if the array element is empty or null.
                 {
                     return;
                 }
-                string oneLine = "";
-                oneLine = oneLine + " " + myArray[x, 0];
-                listBoxWki.Items.Add(oneLine);
+                listBoxWiki.Items.Add(myArray[x, 0]);
+                listBoxCategory.Items.Add(myArray[x, 1]);
+                
             }
         }
 
-        private void sortName()
+        private void sortByColumn()
         {
-            int num = 0;
-            for (int rowX = 0; rowX < rowCounter; rowX++)
-            {
-                for (int j = rowX + 1; j < rowCounter; j++)
+                int num = 0;
+                for (int rowX = 0; rowX < rowCounter; rowX++)
                 {
-                    if ((myArray[rowX, num].CompareTo(myArray[j, num]) > 0))
+                    for (int j = rowX + 1; j <= rowCounter; j++)
                     {
-                        string temp = myArray[rowX, num];
-                        myArray[rowX, num] = myArray[j, num];
-                        myArray[j, num] = temp;
-
-                        for (int k = 1; k <= colCounter; k++)                       // sort the other column respective to their rows sorted
+                        if ((myArray[rowX, num].CompareTo(myArray[j, num]) > 0))
                         {
-                            string temp1 = myArray[rowX, k];
-                            myArray[rowX, k] = myArray[j, k];
-                            myArray[j, k] = temp1;
+                            string temp = myArray[rowX, num];
+                            myArray[rowX, num] = myArray[j, num];
+                            myArray[j, num] = temp;
+
+                            for (int k = 1; k <= colCounter; k++)                       // sort the other column respective to their rows sorted
+                            {
+                                string temp1 = myArray[rowX, k];
+                                myArray[rowX, k] = myArray[j, k];
+                                myArray[j, k] = temp1;
+                            }
                         }
                     }
                 }
-            }
         }
 
         private void IntraWiki_Load(object sender, EventArgs e)
@@ -82,7 +84,7 @@ namespace IntraWiki
                     {
                         if (stream.Length == 0)                                     // if the file is empty just do nothing, to handle the error.
                         {
-                            toolStripStatusLabel1.Text = fileName + "(empty) is opened";
+                            toolStripStatusLabel1.Text = fileName + "(empty) IS OPENED";
                             return;
                         }
                         else                                                       //Only deserialize if the file has binary content
@@ -106,7 +108,7 @@ namespace IntraWiki
                     MessageBox.Show(ex.ToString());
                 }
 
-                toolStripStatusLabel1.Text = fileName + " is opened";
+                toolStripStatusLabel1.Text = fileName + " IS OPENED";
             }
             else
             {
@@ -114,7 +116,7 @@ namespace IntraWiki
                 {
                     using (Stream stream = File.Open(fileName, FileMode.Create))      //by using it open the file and  close (it will do background work for us)
                     {
-                        toolStripStatusLabel1.Text = fileName + " is Created";
+                        toolStripStatusLabel1.Text = fileName + " IS CREATED";
                     }
 
                 }
@@ -126,7 +128,7 @@ namespace IntraWiki
             }
             DisplayArray();
             currentFile = fileName;
-            // sortName();
+           
 
 
         }
@@ -147,7 +149,9 @@ namespace IntraWiki
             myArray[11, 0] = "Hash Table"; myArray[11, 1] = "Hash"; myArray[11, 2] = "Non-Linear"; myArray[11, 3] = "Stack is a special type of collection that stores elements in LIFO style (Last In First Out). C# includes the generic Stack<T> and non-generic Stack collection classes. It is recommended to use the generic Stack<T> collection.Stack is useful to store temporary data in LIFO style, and you might want to delete an element after retrieving its value.";
             rowCounter = 11;
             colCounter = 3;
+            sortByColumn();
             DisplayArray();
+            toolStripStatusLabel1.Text = "DATA IS AUTO-LOADED";
         }
 
 
@@ -155,33 +159,20 @@ namespace IntraWiki
 
         #region ListBox Display 
 
-        public int findIndex(string a)
-        {
-            for (int i = 0; i < rowSize; i++)
-            {
-                if (myArray[i, 0].Equals(a))
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
         private void listBoxWki_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(listBoxWki.SelectedIndex == -1)
+            if(listBoxWiki.SelectedIndex == -1)
             {
                 toolStripStatusLabel1.Text = "! Element in the List Not selected";
             }
             else
             {
-                string selectedItem = listBoxWki.SelectedItem.ToString().Trim();
-                int b = findIndex(selectedItem);
-                textBoxName.Text = myArray[b, 0];
-                toolStripStatusLabel1.Text = String.Format("\"{0}\" is Selected from Row {1} ", selectedItem,b +1);
-                textBoxCategory.Text = myArray[b, 1];
-                textBoxStructure.Text = myArray[b, 2];
-                textBoxDefinition.Text = myArray[b, 3];
+                int currentIndex = listBoxWiki.SelectedIndex;
+                textBoxName.Text = myArray[currentIndex, 0];
+                toolStripStatusLabel1.Text = String.Format("\"{0}\" is Selected from Row {1} ", textBoxName.Text, currentIndex + 1);
+                textBoxCategory.Text = myArray[currentIndex, 1];
+                textBoxStructure.Text = myArray[currentIndex, 2];
+                textBoxDefinition.Text = myArray[currentIndex, 3];
             }
         }
         #endregion
@@ -287,20 +278,20 @@ namespace IntraWiki
             {
                 if (string.IsNullOrEmpty(textBoxName.Text))                                  //this code force the user to input something. As empty string is already in the array, need to mention NullnEmpty both
                 {
-                    errorProvider1.SetError(textBoxName, "Cannot leave blank");
+                    errorProvider1.SetError(textBoxName, "!Cannot leave blank");
                     
                 }
                 if (string.IsNullOrEmpty(textBoxCategory.Text))
                 {
-                    errorProvider1.SetError(textBoxCategory, "Cannot leave blank");
+                    errorProvider1.SetError(textBoxCategory, "!Cannot leave blank");
                 }
                 if (string.IsNullOrEmpty(textBoxStructure.Text))
                 {
-                    errorProvider1.SetError(textBoxStructure, "Cannot leave blank");
+                    errorProvider1.SetError(textBoxStructure, "!Cannot leave blank");
                 }
                 if (string.IsNullOrEmpty(textBoxDefinition.Text))
                 {
-                    errorProvider1.SetError(textBoxDefinition, "Cannot leave blank");
+                    errorProvider1.SetError(textBoxDefinition, "!Cannot leave blank");
                 }
 
                 else
@@ -309,7 +300,7 @@ namespace IntraWiki
                         rowCounter = identifyNextEligibleRow();                             //Will get the next available index to be added.
                     if (rowCounter >= rowSize)                                       // will show exception if added more than the size of 2d array.
                     {
-                        MessageBox.Show("Cannot add more than 12 element");
+                        MessageBox.Show("CANNOT EXCEED MORE THAN 12 ROWS","*User Information*",MessageBoxButtons.OK,MessageBoxIcon.Information);
                         return;
                     }
                         myArray[rowCounter, 0] = textBoxName.Text;
@@ -318,13 +309,15 @@ namespace IntraWiki
                         myArray[rowCounter, 3] = textBoxDefinition.Text;
                         rowCounter++;
                         colCounter = 3;
-                        DisplayArray();
+                        
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
+            DisplayArray();
+            sortByColumn();
         }
 
         private int identifyNextEligibleRow()                                      //useful for add button, if the element already present then it will return the next available array index.
@@ -361,6 +354,8 @@ namespace IntraWiki
         {
             errorProvider1.Clear();
         }
+
+       
     }
     #endregion
 

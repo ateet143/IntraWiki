@@ -33,7 +33,7 @@
             this.buttonSearch = new System.Windows.Forms.Button();
             this.buttonOpen = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
-            this.listBoxWki = new System.Windows.Forms.ListBox();
+            this.listBoxWiki = new System.Windows.Forms.ListBox();
             this.textBoxSearch = new System.Windows.Forms.TextBox();
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.textBoxCategory = new System.Windows.Forms.TextBox();
@@ -45,6 +45,9 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.buttonAutoLoadData = new System.Windows.Forms.Button();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.listBoxCategory = new System.Windows.Forms.ListBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
@@ -76,7 +79,7 @@
             // buttonOpen
             // 
             this.buttonOpen.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.buttonOpen.Location = new System.Drawing.Point(702, 597);
+            this.buttonOpen.Location = new System.Drawing.Point(646, 613);
             this.buttonOpen.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonOpen.Name = "buttonOpen";
             this.buttonOpen.Size = new System.Drawing.Size(112, 35);
@@ -88,7 +91,7 @@
             // buttonSave
             // 
             this.buttonSave.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.buttonSave.Location = new System.Drawing.Point(866, 597);
+            this.buttonSave.Location = new System.Drawing.Point(833, 615);
             this.buttonSave.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(112, 35);
@@ -97,17 +100,17 @@
             this.buttonSave.UseVisualStyleBackColor = false;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
-            // listBoxWki
+            // listBoxWiki
             // 
-            this.listBoxWki.Font = new System.Drawing.Font("Modern No. 20", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listBoxWki.FormattingEnabled = true;
-            this.listBoxWki.ItemHeight = 25;
-            this.listBoxWki.Location = new System.Drawing.Point(591, 154);
-            this.listBoxWki.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.listBoxWki.Name = "listBoxWki";
-            this.listBoxWki.Size = new System.Drawing.Size(505, 404);
-            this.listBoxWki.TabIndex = 4;
-            this.listBoxWki.SelectedIndexChanged += new System.EventHandler(this.listBoxWki_SelectedIndexChanged);
+            this.listBoxWiki.Font = new System.Drawing.Font("Modern No. 20", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBoxWiki.FormattingEnabled = true;
+            this.listBoxWiki.ItemHeight = 25;
+            this.listBoxWiki.Location = new System.Drawing.Point(570, 204);
+            this.listBoxWiki.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.listBoxWiki.Name = "listBoxWiki";
+            this.listBoxWiki.Size = new System.Drawing.Size(310, 379);
+            this.listBoxWiki.TabIndex = 4;
+            this.listBoxWiki.SelectedIndexChanged += new System.EventHandler(this.listBoxWki_SelectedIndexChanged);
             // 
             // textBoxSearch
             // 
@@ -200,7 +203,7 @@
             // buttonAutoLoadData
             // 
             this.buttonAutoLoadData.ForeColor = System.Drawing.SystemColors.WindowFrame;
-            this.buttonAutoLoadData.Location = new System.Drawing.Point(1143, 66);
+            this.buttonAutoLoadData.Location = new System.Drawing.Point(1021, 12);
             this.buttonAutoLoadData.Name = "buttonAutoLoadData";
             this.buttonAutoLoadData.Size = new System.Drawing.Size(125, 51);
             this.buttonAutoLoadData.TabIndex = 13;
@@ -213,11 +216,46 @@
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
             // 
+            // listBoxCategory
+            // 
+            this.listBoxCategory.Font = new System.Drawing.Font("Modern No. 20", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBoxCategory.FormattingEnabled = true;
+            this.listBoxCategory.ItemHeight = 25;
+            this.listBoxCategory.Location = new System.Drawing.Point(911, 205);
+            this.listBoxCategory.Name = "listBoxCategory";
+            this.listBoxCategory.Size = new System.Drawing.Size(282, 379);
+            this.listBoxCategory.TabIndex = 14;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Georgia", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Black;
+            this.label1.Location = new System.Drawing.Point(575, 166);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(159, 27);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "List by Name";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Georgia", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.Black;
+            this.label2.Location = new System.Drawing.Point(915, 166);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(291, 41);
+            this.label2.TabIndex = 16;
+            this.label2.Text = "List by Category";
+            // 
             // IntraWiki
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1322, 787);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.listBoxCategory);
             this.Controls.Add(this.buttonAutoLoadData);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.buttonDelete);
@@ -227,7 +265,7 @@
             this.Controls.Add(this.textBoxCategory);
             this.Controls.Add(this.textBoxName);
             this.Controls.Add(this.textBoxSearch);
-            this.Controls.Add(this.listBoxWki);
+            this.Controls.Add(this.listBoxWiki);
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.buttonOpen);
             this.Controls.Add(this.buttonSearch);
@@ -251,7 +289,7 @@
         private System.Windows.Forms.Button buttonSearch;
         private System.Windows.Forms.Button buttonOpen;
         private System.Windows.Forms.Button buttonSave;
-        private System.Windows.Forms.ListBox listBoxWki;
+        private System.Windows.Forms.ListBox listBoxWiki;
         private System.Windows.Forms.TextBox textBoxSearch;
         private System.Windows.Forms.TextBox textBoxName;
         private System.Windows.Forms.TextBox textBoxCategory;
@@ -263,6 +301,9 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Button buttonAutoLoadData;
         private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.Windows.Forms.ListBox listBoxCategory;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }
 
