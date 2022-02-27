@@ -127,7 +127,7 @@
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(188, 26);
             this.textBoxName.TabIndex = 6;
-            this.textBoxName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxName_KeyPress);
+            this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
             // 
             // textBoxCategory
             // 
@@ -136,7 +136,7 @@
             this.textBoxCategory.Name = "textBoxCategory";
             this.textBoxCategory.Size = new System.Drawing.Size(188, 26);
             this.textBoxCategory.TabIndex = 7;
-            this.textBoxCategory.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxCategory_KeyPress);
+            this.textBoxCategory.TextChanged += new System.EventHandler(this.textBoxCategory_TextChanged);
             // 
             // textBoxStructure
             // 
@@ -145,7 +145,7 @@
             this.textBoxStructure.Name = "textBoxStructure";
             this.textBoxStructure.Size = new System.Drawing.Size(188, 26);
             this.textBoxStructure.TabIndex = 8;
-            this.textBoxStructure.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxStructure_KeyPress);
+            this.textBoxStructure.TextChanged += new System.EventHandler(this.textBoxStructure_TextChanged);
             // 
             // textBoxDefinition
             // 
@@ -155,7 +155,7 @@
             this.textBoxDefinition.Name = "textBoxDefinition";
             this.textBoxDefinition.Size = new System.Drawing.Size(484, 182);
             this.textBoxDefinition.TabIndex = 9;
-            this.textBoxDefinition.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxDefinition_KeyPress);
+            this.textBoxDefinition.TextChanged += new System.EventHandler(this.textBoxDefinition_TextChanged);
             // 
             // buttonEdit
             // 
@@ -202,7 +202,8 @@
             // 
             // buttonAutoLoadData
             // 
-            this.buttonAutoLoadData.ForeColor = System.Drawing.SystemColors.WindowFrame;
+            this.buttonAutoLoadData.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonAutoLoadData.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.buttonAutoLoadData.Location = new System.Drawing.Point(1021, 12);
             this.buttonAutoLoadData.Name = "buttonAutoLoadData";
             this.buttonAutoLoadData.Size = new System.Drawing.Size(125, 51);
@@ -244,7 +245,7 @@
             this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Location = new System.Drawing.Point(915, 166);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(291, 41);
+            this.label2.Size = new System.Drawing.Size(194, 27);
             this.label2.TabIndex = 16;
             this.label2.Text = "List by Category";
             // 
@@ -275,6 +276,7 @@
             this.Name = "IntraWiki";
             this.Text = "IntraWiki";
             this.Load += new System.EventHandler(this.IntraWiki_Load);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.IntraWiki_MouseDown);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
