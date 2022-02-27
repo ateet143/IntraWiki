@@ -27,6 +27,7 @@ namespace IntraWiki
 
         string defaultFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Definitions.bin");
         string currentFile;       //Setting global variable as filename, can be used for saving or renaming file while saving
+        static int counter;
         #endregion
 
         #region Display,Application auto Load, Data Auto load
@@ -229,27 +230,18 @@ namespace IntraWiki
         #region AddFunctions
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(textBoxName.Text))                                  //this code force the user to input something. As empty string is already in the array, need to mention NullnEmpty both
-            {
-                errorProvider1.SetError(textBoxName, "!Cannot leave blank");
-            }
-          else  if (string.IsNullOrEmpty(textBoxCategory.Text))
-            {
-                errorProvider1.SetError(textBoxCategory, "!Cannot leave blank");
-            }
-          else  if (string.IsNullOrEmpty(textBoxStructure.Text))
-            {
-                errorProvider1.SetError(textBoxStructure, "!Cannot leave blank");
-            }
-         else   if (string.IsNullOrEmpty(textBoxDefinition.Text))
-            {
-                errorProvider1.SetError(textBoxDefinition, "!Cannot leave blank");
-            }
 
-            else
+            if (!string.IsNullOrEmpty(textBoxName.Text) && !string.IsNullOrEmpty(textBoxCategory.Text) && !string.IsNullOrEmpty(textBoxStructure.Text) && !string.IsNullOrEmpty(textBoxDefinition.Text))
             {
-                for (int x = 0; x < rowSize;x++)
+                
+                if (counter == rowSize)                                       // will show exception if added more than the size of 2d array.
                 {
+                    MessageBox.Show("CANNOT EXCEED MORE THAN 12 ROWS", "*User Information*", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                for (int x = 0; x < rowSize; x++)
+                {
+                   
                     if (myArray[x, 0] == "")
                     {
                         myArray[x, 0] = textBoxName.Text;
@@ -260,14 +252,30 @@ namespace IntraWiki
                             MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                         if (result == DialogResult.OK)
                         {
+                          toolStripStatusLabel1.Text =  String.Format("\"{0}\" is Added to Row {1} ", textBoxName.Text, x + 1);
+                            counter++;
                             break;
                         }
-                        
+                        else
+                        {
+                            myArray[x, 0] = "";
+                            myArray[x, 1] = "";
+                            myArray[x, 2] = "";
+                            myArray[x, 3] = "";
+                            toolStripStatusLabel1.Text = "!User has cancel to Add";
+                            break;
+                        }
+
                     }
                 }
+                clearTextBox();
+                DisplayArray();
             }
-            clearTextBox();
-            DisplayArray();
+            else
+            {
+                toolStripStatusLabel1.Text = "Field cannot be left empty";
+            }
+           
             
         }
 
