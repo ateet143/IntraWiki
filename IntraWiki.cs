@@ -80,7 +80,7 @@ namespace IntraWiki
             openFileDialogVG.Title = "Select a BIN File";
             if (openFileDialogVG.ShowDialog() == DialogResult.OK)
             {
-                currentFile = openFileDialogVG.FileName;                   
+                currentFile = openFileDialogVG.FileName;
                 openRecord(currentFile);
                 toolStripStatusLabel1.Text = currentFile + " is Opened...";
             }
@@ -98,7 +98,7 @@ namespace IntraWiki
             DisplayArray();
         }
 
-      
+
 
         private void buttonAutoLoadData_Click(object sender, EventArgs e)
         {
@@ -114,7 +114,7 @@ namespace IntraWiki
             myArray[9, 0] = "Queue"; myArray[9, 1] = "Abstract"; myArray[9, 2] = "Linear"; myArray[9, 3] = "Queue is a special type of collection that stores the elements in FIFO style (First In First Out), exactly opposite of the Stack<T> collection. It contains the elements in the order they were added. C# includes generic Queue<T> and non-generic Queue collection. It is recommended to use the generic Queue<T> collection.";
             myArray[10, 0] = "Stack"; myArray[10, 1] = "Abstract"; myArray[10, 2] = "Linear"; myArray[10, 3] = "Stack is a special type of collection that stores elements in LIFO style (Last In First Out). C# includes the generic Stack<T> and non-generic Stack collection classes. It is recommended to use the generic Stack<T> collection.Stack is useful to store temporary data in LIFO style, and you might want to delete an element after retrieving its value.";
             myArray[11, 0] = "Hash Table"; myArray[11, 1] = "Hash"; myArray[11, 2] = "Non-Linear"; myArray[11, 3] = "Stack is a special type of collection that stores elements in LIFO style (Last In First Out). C# includes the generic Stack<T> and non-generic Stack collection classes. It is recommended to use the generic Stack<T> collection.Stack is useful to store temporary data in LIFO style, and you might want to delete an element after retrieving its value.";
-          
+
             sortByColumn();
             DisplayArray();
             toolStripStatusLabel1.Text = "DATA IS AUTO-LOADED";
@@ -167,8 +167,8 @@ namespace IntraWiki
             saveBinary.InitialDirectory = defaultFileName;
             saveBinary.Filter = "binary files (*.bin)|*.bin|All files (*.*)|*.*";            //setting so that user can save as binary files
             saveBinary.DefaultExt = "bin";                                                   //save the file as bin extension if all files is choosed.
-            //saveBinary.FileName = Path.GetFileName(currentFile);                             //set filename in the SaveFileDialog // getFileName extract the name only without path.
-            
+                                                                                             //saveBinary.FileName = Path.GetFileName(currentFile);                             //set filename in the SaveFileDialog // getFileName extract the name only without path.
+
             DialogResult sr = saveBinary.ShowDialog();
 
             if (saveBinary.FileName != "")
@@ -179,7 +179,7 @@ namespace IntraWiki
             {
                 saveRecord(defaultFileName);
             }
-            
+
         }
 
         private void openRecord(string openFileName)
@@ -252,7 +252,7 @@ namespace IntraWiki
                             MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                         if (result == DialogResult.OK)
                         {
-                          toolStripStatusLabel1.Text =  String.Format("\"{0}\" is Added to Row {1}... ", textBoxName.Text, x + 1);
+                            toolStripStatusLabel1.Text = String.Format("\"{0}\" is Added to Row {1}... ", textBoxName.Text, x + 1);
                             counter++;
                             break;
                         }
@@ -296,7 +296,117 @@ namespace IntraWiki
             }
         }
         #endregion
-       
+
+        #region DELETE DATA
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            if (listBoxWiki.SelectedIndex == -1)
+            {
+                toolStripStatusLabel1.Text = "!Element in the List Not selected";
+                return;
+            }
+
+            int currentIndex = listBoxWiki.SelectedIndex;
+            DialogResult modifyTask = MessageBox.Show("Data will Permanently Deleted,Do you want to Continue?", "Delete the data...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (modifyTask == DialogResult.Yes)
+            {
+                myArray[currentIndex, 0] = "-";
+                myArray[currentIndex, 1] = "-";
+                myArray[currentIndex, 2] = "-";
+                myArray[currentIndex, 3] = "-";
+                toolStripStatusLabel1.Text = "!Sucessfully Deleted the Data...";
+                DisplayArray();
+            }
+            else
+            {
+                toolStripStatusLabel1.Text = "!User had cancelled the Delete Operation..";
+            }
+            clearTextBox();
+
+        }
+        private void buttonEdit_Click(object sender, EventArgs e)
+        {
+            if (listBoxWiki.SelectedIndex == -1)
+            {
+                toolStripStatusLabel1.Text = "!Element in the List Not selected";
+                return;
+            }
+
+            int currentIndex = listBoxWiki.SelectedIndex;
+            String oldName = myArray[currentIndex, 0];
+            String oldCategory = myArray[currentIndex, 1];
+            String oldStructure = myArray[currentIndex, 2];
+            String oldDefinition = myArray[currentIndex, 3];
+
+            if (oldName == textBoxName.Text && oldCategory == textBoxCategory.Text && oldStructure == textBoxStructure.Text && oldDefinition == textBoxDefinition.Text)
+            {
+                toolStripStatusLabel1.Text = "Not a Single  Element is changed";
+                return;
+            }
+
+            if (oldName != textBoxName.Text)
+            {
+                DialogResult modifyTask = MessageBox.Show("Data will Permanently Edited,Do you want to Continue?", "Edit the data...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (modifyTask == DialogResult.Yes)
+                {
+                    myArray[currentIndex, 0] = textBoxName.Text;
+                    toolStripStatusLabel1.Text = "Name Sucessfully edited";
+                    DisplayArray();
+                   
+                }
+                else
+                {
+                    toolStripStatusLabel1.Text = "User had cancelled to modify";
+                }
+            }
+
+            if (oldCategory != textBoxCategory.Text)
+            {
+                DialogResult modifyTask = MessageBox.Show("Data will Permanently Edited,Do you want to Continue?", "Editing the data.", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (modifyTask == DialogResult.Yes)
+                {
+                    myArray[currentIndex, 1] = textBoxCategory.Text;
+                    toolStripStatusLabel1.Text = "Category Sucessfully edited";
+                    DisplayArray();
+                }
+                else
+                {
+                    toolStripStatusLabel1.Text = "User had cancelled to modify";
+                }
+            }
+
+            if (oldStructure != textBoxStructure.Text)
+            {
+                DialogResult modifyTask = MessageBox.Show("Data will Permanently Edited,Do you want to Continue?", "Editing the data.", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (modifyTask == DialogResult.Yes)
+                {
+                    myArray[currentIndex, 2] = textBoxStructure.Text;
+                    toolStripStatusLabel1.Text = "Structure Sucessfully edited";
+                    DisplayArray();
+                }
+                else
+                {
+                    toolStripStatusLabel1.Text = "User had cancelled to modify";
+                }
+            }
+
+            if (oldDefinition != textBoxDefinition.Text)
+            {
+                DialogResult modifyTask = MessageBox.Show("Data will Permanently Edited,Do you want to Continue?", "Editing the data.", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (modifyTask == DialogResult.Yes)
+                {
+                    myArray[currentIndex, 3] = textBoxDefinition.Text;
+                    toolStripStatusLabel1.Text = "Definition Sucessfully edited";
+                    DisplayArray();
+                }
+                else
+                {
+                    toolStripStatusLabel1.Text = "User had cancelled to modify";
+                }
+            }
+            clearTextBox();
+        }
+        #endregion
         #region UTILITIES
         private void textBoxName_TextChanged(object sender, EventArgs e)
         {
@@ -317,10 +427,10 @@ namespace IntraWiki
         {
             errorProvider1.Clear();
         }
-       
+
         private void IntraWiki_MouseDown(object sender, MouseEventArgs e)
         {
-            toolStripStatusLabel1.Text = "!Application is Running..." ;
+            toolStripStatusLabel1.Text = "!Application is Running...";
         }
 
 
@@ -333,7 +443,10 @@ namespace IntraWiki
             textBoxName.Focus();
         }
 
+
         #endregion
+
+
     }
 
 
