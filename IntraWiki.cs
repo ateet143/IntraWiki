@@ -26,7 +26,7 @@ namespace IntraWiki
         static string[,] myArray = new string[rowSize, colSize];
 
         string defaultFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Definitions.bin");
-        string currentFile;       //Setting global variable as filename, can be used for saving or renaming file while saving
+        string currentFile;                                     //Setting global variable as filename, can be used for saving or renaming file while saving
         static int counter;
         #endregion
 
@@ -288,7 +288,7 @@ namespace IntraWiki
             textBoxName.Focus();
         }
 
-        private int identifyNextEligibleRow()                                      //useful for add button, if the element already present then it will return the next available array index.
+        private int identifyNextEligibleRow()                           //useful for add button, if the element already present then it will return the next available array index.
         {
             for (int y = 0; y < colSize; y++)
             {
@@ -300,7 +300,7 @@ namespace IntraWiki
                     }
                 }
             }
-            return rowSize;                                        //if not able to find empty or null then return rowsize
+            return rowSize;                                           //if not able to find empty or null then return rowsize
         }
 
         private void textBoxName_KeyPress(object sender, KeyPressEventArgs e)
