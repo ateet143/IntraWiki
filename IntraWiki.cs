@@ -127,12 +127,15 @@ namespace IntraWiki
 
         private void listBoxWki_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBoxWiki.SelectedIndex == -1)
+            if (listBoxWiki.SelectedIndex == -1 && listBoxCategory.SelectedIndex == -1)
             {
                 toolStripStatusLabel1.Text = "!Element in the List Not selected";
+                return;
             }
-            else
+
+            if(listBoxWiki.SelectedIndex != -1)
             {
+                listBoxCategory.ClearSelected();
                 int currentIndex = listBoxWiki.SelectedIndex;
                 textBoxName.Text = myArray[currentIndex, 0];
                 toolStripStatusLabel1.Text = String.Format("\"{0}\" is Selected from Row {1} ", textBoxName.Text, currentIndex + 1);
@@ -140,6 +143,26 @@ namespace IntraWiki
                 textBoxStructure.Text = myArray[currentIndex, 2];
                 textBoxDefinition.Text = myArray[currentIndex, 3];
             }
+        }
+
+        private void listBoxCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBoxWiki.SelectedIndex == -1 && listBoxCategory.SelectedIndex == -1)
+            {
+                toolStripStatusLabel1.Text = "!Element in the List Not selected";
+                return;
+            }
+            if(listBoxCategory.SelectedIndex != -1)
+            {
+                listBoxWiki.ClearSelected();
+                int currentIndex = listBoxCategory.SelectedIndex;
+                textBoxName.Text = myArray[currentIndex, 0];
+                toolStripStatusLabel1.Text = String.Format("\"{0}\" is Selected from Row {1} ", textBoxName.Text, currentIndex + 1);
+                textBoxCategory.Text = myArray[currentIndex, 1];
+                textBoxStructure.Text = myArray[currentIndex, 2];
+                textBoxDefinition.Text = myArray[currentIndex, 3];
+            }
+           
         }
         #endregion
 
@@ -444,9 +467,10 @@ namespace IntraWiki
         }
 
 
+
         #endregion
 
-
+      
     }
 
 
