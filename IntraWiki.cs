@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Diagnostics;
+using System.Runtime.Serialization;
+
 
 namespace IntraWiki
 {
@@ -27,7 +29,6 @@ namespace IntraWiki
 
         string defaultFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Definitions.bin");
         string currentFile;                                     //Setting global variable as filename, can be used for saving or renaming file while saving
-        static int counter;
         #endregion
 
         #region DISPLAY,APPLICATION AUTO LOAD, DATA AUTO LOAD
@@ -38,37 +39,13 @@ namespace IntraWiki
 
             for (int x = 0; x < rowSize; x++)
             {
-                if ((string.IsNullOrEmpty(myArray[x, 0]) || string.IsNullOrEmpty(myArray[x, 1])))   //Will not add to the list box if the array element is empty or null.
+                if (string.IsNullOrEmpty(myArray[x, 0]))
                 {
                     return;
                 }
+
                 listBoxWiki.Items.Add(myArray[x, 0]);
                 listBoxCategory.Items.Add(myArray[x, 1]);
-
-            }
-        }
-
-        private void sortByColumn()
-        {
-            int num = 0;
-            for (int rowX = 0; rowX < rowSize; rowX++)
-            {
-                for (int j = rowX + 1; j < rowSize; j++)
-                {
-                    if ((myArray[rowX, num].CompareTo(myArray[j, num]) > 0))
-                    {
-                        string temp = myArray[rowX, num];
-                        myArray[rowX, num] = myArray[j, num];
-                        myArray[j, num] = temp;
-
-                        for (int k = 1; k < colSize; k++)                       // sort the other column respective to their rows sorted
-                        {
-                            string temp1 = myArray[rowX, k];
-                            myArray[rowX, k] = myArray[j, k];
-                            myArray[j, k] = temp1;
-                        }
-                    }
-                }
             }
         }
 
@@ -98,8 +75,6 @@ namespace IntraWiki
             DisplayArray();
         }
 
-
-
         private void buttonAutoLoadData_Click(object sender, EventArgs e)
         {
             myArray[0, 0] = "Array"; myArray[0, 1] = "Array"; myArray[0, 2] = "Linear"; myArray[0, 3] = "An array is a collection of elements of the same type placed in contiguous memory locations that can be individually referenced by using an index to a unique identifier.";
@@ -114,13 +89,11 @@ namespace IntraWiki
             myArray[9, 0] = "Queue"; myArray[9, 1] = "Abstract"; myArray[9, 2] = "Linear"; myArray[9, 3] = "Queue is a special type of collection that stores the elements in FIFO style (First In First Out), exactly opposite of the Stack<T> collection. It contains the elements in the order they were added. C# includes generic Queue<T> and non-generic Queue collection. It is recommended to use the generic Queue<T> collection.";
             myArray[10, 0] = "Stack"; myArray[10, 1] = "Abstract"; myArray[10, 2] = "Linear"; myArray[10, 3] = "Stack is a special type of collection that stores elements in LIFO style (Last In First Out). C# includes the generic Stack<T> and non-generic Stack collection classes. It is recommended to use the generic Stack<T> collection.Stack is useful to store temporary data in LIFO style, and you might want to delete an element after retrieving its value.";
             myArray[11, 0] = "Hash Table"; myArray[11, 1] = "Hash"; myArray[11, 2] = "Non-Linear"; myArray[11, 3] = "Stack is a special type of collection that stores elements in LIFO style (Last In First Out). C# includes the generic Stack<T> and non-generic Stack collection classes. It is recommended to use the generic Stack<T> collection.Stack is useful to store temporary data in LIFO style, and you might want to delete an element after retrieving its value.";
+            //myArray[11, 0] = ""; myArray[11, 1] = ""; myArray[11, 2] = ""; myArray[11, 3] = "";
 
-            sortByColumn();
             DisplayArray();
             toolStripStatusLabel1.Text = "DATA IS AUTO-LOADED";
         }
-
-
         #endregion
 
         #region LISTBOX DISPLAY 
@@ -133,7 +106,7 @@ namespace IntraWiki
                 return;
             }
 
-            if(listBoxWiki.SelectedIndex != -1)
+            if (listBoxWiki.SelectedIndex != -1)
             {
                 listBoxCategory.ClearSelected();
                 int currentIndex = listBoxWiki.SelectedIndex;
@@ -152,7 +125,7 @@ namespace IntraWiki
                 toolStripStatusLabel1.Text = "!Element in the List Not selected";
                 return;
             }
-            if(listBoxCategory.SelectedIndex != -1)
+            if (listBoxCategory.SelectedIndex != -1)
             {
                 listBoxWiki.ClearSelected();
                 int currentIndex = listBoxCategory.SelectedIndex;
@@ -162,7 +135,7 @@ namespace IntraWiki
                 textBoxStructure.Text = myArray[currentIndex, 2];
                 textBoxDefinition.Text = myArray[currentIndex, 3];
             }
-           
+
         }
         #endregion
 
@@ -207,11 +180,13 @@ namespace IntraWiki
 
         private void openRecord(string openFileName)
         {
+
             try
             {
                 using (Stream stream = File.Open(openFileName, FileMode.Open))
                 {
                     BinaryFormatter bin = new BinaryFormatter();
+
                     for (int y = 0; y < colSize; y++)
                     {
                         for (int x = 0; x < rowSize; x++)
@@ -220,6 +195,17 @@ namespace IntraWiki
                         }
                     }
                 }
+            }
+            catch (SerializationException)
+            {
+                for (int x = 0; x < rowSize; x++)
+                {
+                    myArray[x, 0] = String.Empty;
+                    myArray[x, 1] = String.Empty;
+                    myArray[x, 2] = String.Empty;
+                    myArray[x, 3] = String.Empty;
+                }
+                toolStripStatusLabel1.Text = "!File is Loaded with Empty Data...";
             }
             catch (IOException ex)
             {
@@ -258,13 +244,16 @@ namespace IntraWiki
 
             if (!string.IsNullOrEmpty(textBoxName.Text) && !string.IsNullOrEmpty(textBoxCategory.Text) && !string.IsNullOrEmpty(textBoxStructure.Text) && !string.IsNullOrEmpty(textBoxDefinition.Text))
             {
-                if (counter == rowSize)                                       // will show exception if added more than the size of 2d array.
-                {
-                    MessageBox.Show("CANNOT EXCEED MORE THAN 12 ROWS", "*User Information*", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
+
                 for (int x = 0; x < rowSize; x++)
                 {
+                    if (x == 11 && myArray[x, 0] != String.Empty)
+                    {
+                        MessageBox.Show("CANNOT EXCEED MORE THAN 12 ROWS", "*User Information*", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        clearTextBox();
+                        return;
+                    }
+
                     if (myArray[x, 0] == String.Empty)
                     {
                         myArray[x, 0] = textBoxName.Text;
@@ -276,7 +265,6 @@ namespace IntraWiki
                         if (result == DialogResult.OK)
                         {
                             toolStripStatusLabel1.Text = String.Format("\"{0}\" is Added to Row {1}... ", textBoxName.Text, x + 1);
-                            counter++;
                             break;
                         }
                         else
@@ -289,6 +277,7 @@ namespace IntraWiki
                             break;
                         }
                     }
+
                 }
                 clearTextBox();
                 DisplayArray();
@@ -375,7 +364,7 @@ namespace IntraWiki
                     myArray[currentIndex, 0] = textBoxName.Text;
                     toolStripStatusLabel1.Text = "Name Sucessfully edited";
                     DisplayArray();
-                   
+
                 }
                 else
                 {
@@ -430,6 +419,98 @@ namespace IntraWiki
             clearTextBox();
         }
         #endregion
+
+        #region SORT AND SEARCH
+
+        private void sortByColumn()
+        {
+            int num = 0;
+            for (int i = 0; i < rowSize; i++)
+            {
+                for (int rows = 0; rows < rowSize - 1; rows++)
+                {
+                    if (string.IsNullOrEmpty(myArray[rows, num]) || string.IsNullOrEmpty(myArray[rows + 1, num]))
+                    {
+                        break;
+                    }
+                    for (int column = 1; column < colSize; column++)
+                    {
+                        if ((myArray[rows, num].CompareTo(myArray[rows + 1, num]) > 0))
+                        {
+                            swap(num, rows, column);
+                        }
+                    }
+                }
+            }
+
+        }
+        private void swap(int num, int rows, int column)
+        {
+            string tempForColumn = myArray[rows, num];
+            myArray[rows, num] = myArray[rows + 1, num];
+            myArray[rows + 1, num] = tempForColumn;
+
+            string tempForRow = myArray[rows, column];
+            myArray[rows, column] = myArray[rows + 1, column];
+            myArray[rows + 1, column] = tempForRow;
+        }
+        private void buttonSort_Click(object sender, EventArgs e)
+        {
+            sortByColumn();
+            DisplayArray();
+        }
+
+        private void buttonSearch_Click(object sender, EventArgs e)
+        {
+            sortByColumn();
+            DisplayArray();
+            string target = textBoxSearch.Text.ToUpper();
+            var (mid, found) = binarySearch(target);
+           
+            if (found)
+            {
+                listBoxWiki.SelectedIndex = mid;
+                toolStripStatusLabel1.Text = target + " is found in line " + (mid + 1);
+                textBoxSearch.Clear();
+                textBoxSearch.Focus();
+            }
+
+            else
+            {
+                toolStripStatusLabel1.Text = "!Could not found the typed word...";
+                textBoxSearch.Clear();
+                textBoxSearch.Focus();
+            }
+
+        }
+
+        private (int , bool ) binarySearch(string target)
+        {
+            int min = 0;
+            int rowMax = rowSize - 1;
+            int mid = 0;
+            bool found = false;
+            while (min <= rowMax)
+            {
+                mid = (min + rowMax) / 2;
+                if (myArray[mid, 0].ToUpper().Equals(target))
+                {
+                    found = true;
+                    break;
+                }
+                else if (target.CompareTo(myArray[mid, 0].ToUpper()) < 0)
+                {
+                    rowMax = mid - 1;
+                }
+                else
+                {
+                    min = mid + 1;
+                }
+            }
+            return (mid, found);
+        }
+        #endregion
+
         #region UTILITIES
         private void textBoxName_TextChanged(object sender, EventArgs e)
         {
@@ -456,7 +537,6 @@ namespace IntraWiki
             toolStripStatusLabel1.Text = "!Application is Running...";
         }
 
-
         private void clearTextBox()
         {
             textBoxName.Clear();
@@ -465,13 +545,6 @@ namespace IntraWiki
             textBoxDefinition.Clear();
             textBoxName.Focus();
         }
-
-
-
         #endregion
-
-      
     }
-
-
 }

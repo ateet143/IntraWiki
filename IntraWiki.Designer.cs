@@ -48,6 +48,7 @@
             this.listBoxCategory = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.buttonSort = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
@@ -75,11 +76,12 @@
             this.buttonSearch.TabIndex = 1;
             this.buttonSearch.Text = "SEARCH";
             this.buttonSearch.UseVisualStyleBackColor = false;
+            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
             // 
             // buttonOpen
             // 
             this.buttonOpen.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.buttonOpen.Location = new System.Drawing.Point(646, 613);
+            this.buttonOpen.Location = new System.Drawing.Point(646, 612);
             this.buttonOpen.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonOpen.Name = "buttonOpen";
             this.buttonOpen.Size = new System.Drawing.Size(112, 35);
@@ -91,7 +93,7 @@
             // buttonSave
             // 
             this.buttonSave.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.buttonSave.Location = new System.Drawing.Point(833, 615);
+            this.buttonSave.Location = new System.Drawing.Point(832, 615);
             this.buttonSave.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(112, 35);
@@ -105,10 +107,10 @@
             this.listBoxWiki.Font = new System.Drawing.Font("Modern No. 20", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxWiki.FormattingEnabled = true;
             this.listBoxWiki.ItemHeight = 25;
-            this.listBoxWiki.Location = new System.Drawing.Point(570, 204);
+            this.listBoxWiki.Location = new System.Drawing.Point(570, 205);
             this.listBoxWiki.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.listBoxWiki.Name = "listBoxWiki";
-            this.listBoxWiki.Size = new System.Drawing.Size(310, 379);
+            this.listBoxWiki.Size = new System.Drawing.Size(310, 354);
             this.listBoxWiki.TabIndex = 4;
             this.listBoxWiki.SelectedIndexChanged += new System.EventHandler(this.listBoxWki_SelectedIndexChanged);
             // 
@@ -188,8 +190,9 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 755);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 756);
             this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 14, 0);
             this.statusStrip1.Size = new System.Drawing.Size(1322, 32);
             this.statusStrip1.TabIndex = 12;
             this.statusStrip1.Text = "statusStrip1";
@@ -206,9 +209,9 @@
             // 
             this.buttonAutoLoadData.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonAutoLoadData.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.buttonAutoLoadData.Location = new System.Drawing.Point(1021, 12);
+            this.buttonAutoLoadData.Location = new System.Drawing.Point(1022, 12);
             this.buttonAutoLoadData.Name = "buttonAutoLoadData";
-            this.buttonAutoLoadData.Size = new System.Drawing.Size(125, 51);
+            this.buttonAutoLoadData.Size = new System.Drawing.Size(124, 51);
             this.buttonAutoLoadData.TabIndex = 13;
             this.buttonAutoLoadData.Text = "Auto Load Data";
             this.buttonAutoLoadData.UseVisualStyleBackColor = true;
@@ -224,9 +227,9 @@
             this.listBoxCategory.Font = new System.Drawing.Font("Modern No. 20", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxCategory.FormattingEnabled = true;
             this.listBoxCategory.ItemHeight = 25;
-            this.listBoxCategory.Location = new System.Drawing.Point(911, 205);
+            this.listBoxCategory.Location = new System.Drawing.Point(910, 205);
             this.listBoxCategory.Name = "listBoxCategory";
-            this.listBoxCategory.Size = new System.Drawing.Size(282, 379);
+            this.listBoxCategory.Size = new System.Drawing.Size(282, 354);
             this.listBoxCategory.TabIndex = 14;
             this.listBoxCategory.SelectedIndexChanged += new System.EventHandler(this.listBoxCategory_SelectedIndexChanged);
             // 
@@ -235,7 +238,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Georgia", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(575, 166);
+            this.label1.Location = new System.Drawing.Point(574, 166);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(159, 27);
             this.label1.TabIndex = 15;
@@ -252,11 +255,24 @@
             this.label2.TabIndex = 16;
             this.label2.Text = "List by Category";
             // 
+            // buttonSort
+            // 
+            this.buttonSort.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.buttonSort.Location = new System.Drawing.Point(1022, 85);
+            this.buttonSort.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonSort.Name = "buttonSort";
+            this.buttonSort.Size = new System.Drawing.Size(124, 35);
+            this.buttonSort.TabIndex = 17;
+            this.buttonSort.Text = "Sort Name";
+            this.buttonSort.UseVisualStyleBackColor = false;
+            this.buttonSort.Click += new System.EventHandler(this.buttonSort_Click);
+            // 
             // IntraWiki
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1322, 787);
+            this.ClientSize = new System.Drawing.Size(1322, 788);
+            this.Controls.Add(this.buttonSort);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listBoxCategory);
@@ -309,6 +325,7 @@
         private System.Windows.Forms.ListBox listBoxCategory;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button buttonSort;
     }
 }
 
