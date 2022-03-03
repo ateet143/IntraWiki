@@ -29,6 +29,7 @@ namespace IntraWiki
 
         string defaultFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Definitions.bin");
         string currentFile;                                     //Setting global variable as filename, can be used for saving or renaming file while saving
+
         #endregion
 
         #region DISPLAY,APPLICATION AUTO LOAD, DATA AUTO LOAD
@@ -247,14 +248,14 @@ namespace IntraWiki
 
                 for (int x = 0; x < rowSize; x++)
                 {
-                    if (x == 11 && myArray[x, 0] != String.Empty)
+                    if (x == 11 && (myArray[x, 0] != String.Empty && myArray[x, 0] != "-"))
                     {
                         MessageBox.Show("CANNOT EXCEED MORE THAN 12 ROWS", "*User Information*", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         clearTextBox();
                         return;
                     }
 
-                    if (myArray[x, 0] == String.Empty)
+                    if (myArray[x, 0] == String.Empty || myArray[x, 0] == "-")
                     {
                         myArray[x, 0] = textBoxName.Text;
                         myArray[x, 1] = textBoxCategory.Text;
@@ -309,7 +310,7 @@ namespace IntraWiki
         }
         #endregion
 
-        #region DELETE DATA
+        #region DELETE, EDIT DATA
         private void buttonDelete_Click(object sender, EventArgs e)
         {
             if (listBoxWiki.SelectedIndex == -1)
@@ -355,60 +356,15 @@ namespace IntraWiki
                 toolStripStatusLabel1.Text = "Not a Single  Element is changed";
                 return;
             }
-
-            if (oldName != textBoxName.Text)
+            else
             {
                 DialogResult modifyTask = MessageBox.Show("Data will Permanently Edited,Do you want to Continue?", "Edit the data...", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (modifyTask == DialogResult.Yes)
                 {
                     myArray[currentIndex, 0] = textBoxName.Text;
-                    toolStripStatusLabel1.Text = "Name Sucessfully edited";
-                    DisplayArray();
-
-                }
-                else
-                {
-                    toolStripStatusLabel1.Text = "User had cancelled to modify";
-                }
-            }
-
-            if (oldCategory != textBoxCategory.Text)
-            {
-                DialogResult modifyTask = MessageBox.Show("Data will Permanently Edited,Do you want to Continue?", "Editing the data.", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (modifyTask == DialogResult.Yes)
-                {
                     myArray[currentIndex, 1] = textBoxCategory.Text;
-                    toolStripStatusLabel1.Text = "Category Sucessfully edited";
-                    DisplayArray();
-                }
-                else
-                {
-                    toolStripStatusLabel1.Text = "User had cancelled to modify";
-                }
-            }
-
-            if (oldStructure != textBoxStructure.Text)
-            {
-                DialogResult modifyTask = MessageBox.Show("Data will Permanently Edited,Do you want to Continue?", "Editing the data.", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (modifyTask == DialogResult.Yes)
-                {
                     myArray[currentIndex, 2] = textBoxStructure.Text;
-                    toolStripStatusLabel1.Text = "Structure Sucessfully edited";
-                    DisplayArray();
-                }
-                else
-                {
-                    toolStripStatusLabel1.Text = "User had cancelled to modify";
-                }
-            }
-
-            if (oldDefinition != textBoxDefinition.Text)
-            {
-                DialogResult modifyTask = MessageBox.Show("Data will Permanently Edited,Do you want to Continue?", "Editing the data.", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (modifyTask == DialogResult.Yes)
-                {
                     myArray[currentIndex, 3] = textBoxDefinition.Text;
-                    toolStripStatusLabel1.Text = "Definition Sucessfully edited";
                     DisplayArray();
                 }
                 else
@@ -433,27 +389,32 @@ namespace IntraWiki
                     {
                         break;
                     }
-                    for (int column = 1; column < colSize; column++)
+                    if (myArray[rows + 1, num].Equals("-"))
                     {
-                        if ((myArray[rows, num].CompareTo(myArray[rows + 1, num]) > 0))
-                        {
-                            swap(num, rows, column);
-                        }
+                        continue;
+                    }
+
+                    if ((myArray[rows, num].CompareTo(myArray[rows + 1, num]) > 0) || myArray[rows, num].Equals("-") && !myArray[rows + 1, num].Equals("-"))
+                    {
+                        swap(num, rows);
                     }
                 }
             }
 
         }
-        private void swap(int num, int rows, int column)
+        private void swap(int num, int rows)
         {
             string tempForColumn = myArray[rows, num];
             myArray[rows, num] = myArray[rows + 1, num];
             myArray[rows + 1, num] = tempForColumn;
-
-            string tempForRow = myArray[rows, column];
-            myArray[rows, column] = myArray[rows + 1, column];
-            myArray[rows + 1, column] = tempForRow;
+            for (int column = 1; column < colSize; column++)
+            {
+                string tempForRow = myArray[rows, column];
+                myArray[rows, column] = myArray[rows + 1, column];
+                myArray[rows + 1, column] = tempForRow;
+            }
         }
+
         private void buttonSort_Click(object sender, EventArgs e)
         {
             sortByColumn();
@@ -466,7 +427,7 @@ namespace IntraWiki
             DisplayArray();
             string target = textBoxSearch.Text.ToUpper();
             var (mid, found) = binarySearch(target);
-           
+
             if (found)
             {
                 listBoxWiki.SelectedIndex = mid;
@@ -484,7 +445,7 @@ namespace IntraWiki
 
         }
 
-        private (int , bool ) binarySearch(string target)
+        private (int, bool) binarySearch(string target)
         {
             int min = 0;
             int rowMax = rowSize - 1;
