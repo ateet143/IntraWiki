@@ -29,7 +29,7 @@ namespace IntraWiki
 
         string defaultFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Definitions.bin");
         string currentFile;                                     //Setting global variable as filename, can be used for saving or renaming file while saving
-
+     
         #endregion
 
         #region DISPLAY,APPLICATION AUTO LOAD, DATA AUTO LOAD
@@ -90,8 +90,6 @@ namespace IntraWiki
             myArray[9, 0] = "Queue"; myArray[9, 1] = "Abstract"; myArray[9, 2] = "Linear"; myArray[9, 3] = "Queue is a special type of collection that stores the elements in FIFO style (First In First Out), exactly opposite of the Stack<T> collection. It contains the elements in the order they were added. C# includes generic Queue<T> and non-generic Queue collection. It is recommended to use the generic Queue<T> collection.";
             myArray[10, 0] = "Stack"; myArray[10, 1] = "Abstract"; myArray[10, 2] = "Linear"; myArray[10, 3] = "Stack is a special type of collection that stores elements in LIFO style (Last In First Out). C# includes the generic Stack<T> and non-generic Stack collection classes. It is recommended to use the generic Stack<T> collection.Stack is useful to store temporary data in LIFO style, and you might want to delete an element after retrieving its value.";
             myArray[11, 0] = "Hash Table"; myArray[11, 1] = "Hash"; myArray[11, 2] = "Non-Linear"; myArray[11, 3] = "Stack is a special type of collection that stores elements in LIFO style (Last In First Out). C# includes the generic Stack<T> and non-generic Stack collection classes. It is recommended to use the generic Stack<T> collection.Stack is useful to store temporary data in LIFO style, and you might want to delete an element after retrieving its value.";
-            //myArray[11, 0] = ""; myArray[11, 1] = ""; myArray[11, 2] = ""; myArray[11, 3] = "";
-
             DisplayArray();
             toolStripStatusLabel1.Text = "DATA IS AUTO-LOADED";
         }
@@ -378,12 +376,12 @@ namespace IntraWiki
 
         #region SORT AND SEARCH
 
-        private void sortByColumn()
+        private void sortByColumn(int sortedColumn)
         {
-            int num = 0;
-            for (int i = 0; i < rowSize; i++)
+            int num = sortedColumn;
+            for (int i = 0; i < rowSize -1; i++)
             {
-                for (int rows = 0; rows < rowSize - 1; rows++)
+                for (int rows = 0; rows < rowSize -i - 1; rows++)
                 {
                     if (string.IsNullOrEmpty(myArray[rows, num]) || string.IsNullOrEmpty(myArray[rows + 1, num]))
                     {
@@ -407,23 +405,35 @@ namespace IntraWiki
             string tempForColumn = myArray[rows, num];
             myArray[rows, num] = myArray[rows + 1, num];
             myArray[rows + 1, num] = tempForColumn;
-            for (int column = 1; column < colSize; column++)
+            for (int column = 0; column < colSize; column++)
             {
+                if(column == num)
+                {
+                    continue;
+                }
                 string tempForRow = myArray[rows, column];
                 myArray[rows, column] = myArray[rows + 1, column];
                 myArray[rows + 1, column] = tempForRow;
             }
         }
 
-        private void buttonSort_Click(object sender, EventArgs e)
+        private void labelName_Click(object sender, EventArgs e)
         {
-            sortByColumn();
+            sortByColumn(0);
             DisplayArray();
+            toolStripStatusLabel1.Text = "Data Sorted By Name...";
+        }
+
+        private void labelCategory_Click(object sender, EventArgs e)
+        {
+            sortByColumn(1);
+            DisplayArray();
+            toolStripStatusLabel1.Text = "Data Sorted By Category...";
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
         {
-            sortByColumn();
+            sortByColumn(0);
             DisplayArray();
             string target = textBoxSearch.Text.ToUpper();
             var (mid, found) = binarySearch(target);
@@ -507,5 +517,7 @@ namespace IntraWiki
             textBoxName.Focus();
         }
         #endregion
+
+      
     }
 }
