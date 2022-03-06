@@ -394,26 +394,26 @@ namespace IntraWiki
 
                     if ((myArray[rows, num].CompareTo(myArray[rows + 1, num]) > 0) || myArray[rows, num].Equals("-") && !myArray[rows + 1, num].Equals("-"))
                     {
-                        swap(num, rows);
+                        swap(num, rows, myArray);
                     }
                 }
             }
 
         }
-        private void swap(int num, int rows)
+        private void swap(int columnToBeSorted, int rows, string[,] twoDArray)
         {
-            string tempForColumn = myArray[rows, num];
-            myArray[rows, num] = myArray[rows + 1, num];
-            myArray[rows + 1, num] = tempForColumn;
+            string tempForColumn = twoDArray[rows, columnToBeSorted];
+            twoDArray[rows, columnToBeSorted] = twoDArray[rows + 1, columnToBeSorted];
+            twoDArray[rows + 1, columnToBeSorted] = tempForColumn;
             for (int column = 0; column < colSize; column++)
             {
-                if(column == num)
+                if(column == columnToBeSorted)
                 {
                     continue;
                 }
-                string tempForRow = myArray[rows, column];
-                myArray[rows, column] = myArray[rows + 1, column];
-                myArray[rows + 1, column] = tempForRow;
+                string tempForRow = twoDArray[rows, column];
+                twoDArray[rows, column] = twoDArray[rows + 1, column];
+                twoDArray[rows + 1, column] = tempForRow;
             }
         }
 
