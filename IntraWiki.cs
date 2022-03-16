@@ -495,6 +495,7 @@ namespace IntraWiki
                 {
                     listBoxWiki.SelectedIndex = mid;
                     toolStripStatusLabel1.Text = target + " is found in line " + (mid + 1);
+                    Trace.WriteLine("Display Message in toolStrip:" + toolStripStatusLabel1.Text);
                     textBoxSearch.Clear();
                     textBoxSearch.Focus();
                 }
@@ -502,6 +503,7 @@ namespace IntraWiki
                 else
                 {
                     toolStripStatusLabel1.Text = "!Could not found the typed word...";
+                    Trace.WriteLine("Display Message in toolStrip:" + toolStripStatusLabel1.Text);
                     textBoxSearch.Clear();
                     textBoxSearch.Focus();
                 }
@@ -510,6 +512,7 @@ namespace IntraWiki
             {
                 errorProvider1.SetError(textBoxSearch, "Please type in the box and click Search");
                 toolStripStatusLabel1.Text = "User has not typed any word...";
+                Trace.WriteLine("Display Message in toolStrip:" + toolStripStatusLabel1.Text);
             }
 
 
